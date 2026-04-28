@@ -3,5 +3,7 @@ title: "Contact"
 ---
 
 Email: yifanhu@bu.edu
+
 github link: https://github.com/jimmm123
+
 linkedin: https://www.linkedin.com/in/yifan-hujimmm/
