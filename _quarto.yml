@@ -8,7 +8,7 @@ website:
   title: "jimmm123"
   navbar:
     left:
-      - text: About You
+      - text: About Me
         href: about.qmd
       - text: Projects
         href: projects.qmd
