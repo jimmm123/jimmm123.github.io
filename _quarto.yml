@@ -1,10 +1,11 @@
 project:
   type: website
+  output-dir: .
   resources:
-    - references.bib
+    - projects/job-market-analysis-2024/references.bib
 
 website:
-  title: "Jim Portfolio"
+  title: "jimmm123"
   navbar:
     left:
       - text: About You
@@ -20,7 +21,7 @@ format:
   html:
     css: style.css
     theme: cosmo
-    toc: true
+    toc: false
 execute:
   echo: false
   eval: true

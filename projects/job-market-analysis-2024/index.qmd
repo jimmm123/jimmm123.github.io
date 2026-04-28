@@ -1,0 +1,11 @@
+---
+title: "Job Market Analysis 2024"
+---
+
+This project is organized in this subdirectory.
+
+- [Project Overview](introduction.html)
+- [Data Preparation](data_cleaning.html)
+- [Salary & Compensation Trends](salary_compensation_trends.html)
+- [Career & Skill Trends](trends.html)
+- [References](references.bib)
