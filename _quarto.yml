@@ -3,6 +3,7 @@ project:
   output-dir: .
   resources:
     - projects/job-market-analysis-2024/references.bib
+    - files/Yifan_Hu_English_Resume.pdf
 
 website:
   title: "jimmm123"
