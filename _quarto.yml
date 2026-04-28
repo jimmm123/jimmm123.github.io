@@ -6,7 +6,7 @@ project:
     - files/Yifan_Hu_English_Resume.pdf
 
 website:
-  title: "jimmm123"
+  title: "Yifan Hu"
   navbar:
     left:
       - text: About Me
