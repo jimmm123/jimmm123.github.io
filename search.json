@@ -207,6 +207,34 @@
     "href": "about.html",
     "title": "About You",
     "section": "",
-    "text": "Content will be added later."
+    "text": "Hi, I’m Yifan Hu, an Applied Data Analytics graduate student at Boston University, with a background in Mathematics from Stony Brook University.\nI am passionate about using data to understand user behavior, generate insights, and support business decision-making. With a strong foundation in mathematical thinking and experience in Python, SQL, and data visualization, I enjoy working with real-world datasets to uncover meaningful patterns and trends."
+  },
+  {
+    "objectID": "about.html#about-me",
+    "href": "about.html#about-me",
+    "title": "About You",
+    "section": "",
+    "text": "Hi, I’m Yifan Hu, an Applied Data Analytics graduate student at Boston University, with a background in Mathematics from Stony Brook University.\nI am passionate about using data to understand user behavior, generate insights, and support business decision-making. With a strong foundation in mathematical thinking and experience in Python, SQL, and data visualization, I enjoy working with real-world datasets to uncover meaningful patterns and trends."
+  },
+  {
+    "objectID": "about.html#interests",
+    "href": "about.html#interests",
+    "title": "About You",
+    "section": "Interests",
+    "text": "Interests\n\nData Analysis & Business Analytics\n\nGaming Industry & Esports Analytics\n\nAI Applications in Business"
+  },
+  {
+    "objectID": "about.html#career-goals",
+    "href": "about.html#career-goals",
+    "title": "About You",
+    "section": "Career Goals",
+    "text": "Career Goals\nMy goal is to pursue a career in data analysis or business analytics, particularly in the gaming or technology industry. I am interested in roles that involve:\n\nAnalyzing user behavior and engagement\n\nBuilding data-driven strategies\n\nSupporting product and business decisions\n\nWorking with large-scale real-world datasets\n\nI aim to continuously develop my technical and analytical skills while applying data insights to create meaningful impact in organizations."
+  },
+  {
+    "objectID": "about.html#skills",
+    "href": "about.html#skills",
+    "title": "About You",
+    "section": "Skills",
+    "text": "Skills\n\nProgramming: Python (Pandas, NumPy, Matplotlib), SQL\n\nData Analysis: Exploratory Data Analysis, Data Cleaning, Visualization\n\nTools: Tableau, tableau, GitHub, Quarto"
   }
 ]

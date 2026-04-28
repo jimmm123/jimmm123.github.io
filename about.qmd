@@ -2,4 +2,35 @@
 title: "About You"
 ---
 
-Content will be added later.
+---
+title: "About You"
+---
+
+## About Me
+
+Hi, I'm Yifan Hu, an Applied Data Analytics graduate student at Boston University, with a background in Mathematics from Stony Brook University.
+
+I am passionate about using data to understand user behavior, generate insights, and support business decision-making. With a strong foundation in mathematical thinking and experience in Python, SQL, and data visualization, I enjoy working with real-world datasets to uncover meaningful patterns and trends.
+
+## Interests
+
+- Data Analysis & Business Analytics  
+- Gaming Industry & Esports Analytics  
+- AI Applications in Business  
+
+## Career Goals
+
+My goal is to pursue a career in data analysis or business analytics, particularly in the gaming or technology industry. I am interested in roles that involve:
+
+- Analyzing user behavior and engagement  
+- Building data-driven strategies  
+- Supporting product and business decisions  
+- Working with large-scale real-world datasets  
+
+I aim to continuously develop my technical and analytical skills while applying data insights to create meaningful impact in organizations.
+
+## Skills
+
+- Programming: Python (Pandas, NumPy, Matplotlib), SQL  
+- Data Analysis: Exploratory Data Analysis, Data Cleaning, Visualization  
+- Tools: Tableau, tableau, GitHub, Quarto  
