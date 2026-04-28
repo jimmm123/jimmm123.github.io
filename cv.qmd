@@ -1,0 +1,47 @@
+---
+title: "CV"
+page-layout: full
+toc: false
+body-classes: portfolio-page cv-page
+---
+
+::: {.page-hero .compact-hero}
+::: {.hero-kicker}
+CV
+:::
+
+# Curriculum Vitae
+
+A concise overview of education, skills, project experience, and analytical tools.
+:::
+
+::: {.content-band .cv-layout}
+
+## Education
+
+Add your school, degree program, concentration, and expected graduation date here.
+
+## Skills
+
+::: {.skill-cloud}
+`Python`
+`Pandas`
+`Data Cleaning`
+`Plotly`
+`Machine Learning`
+`Salary Analysis`
+`Labor Market Research`
+`Quarto`
+:::
+
+## Project Experience
+
+### Job Market Analysis 2024
+
+Analyzed Lightcast job posting data to compare AI-related and non-AI career trends, salary differences, remote work patterns, industry wage growth, and in-demand skills.
+
+## Tools
+
+Python, pandas, NumPy, Plotly, scikit-learn, statsmodels, Quarto, GitHub Pages.
+
+:::

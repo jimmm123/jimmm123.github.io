@@ -1,20 +1,20 @@
 project:
   type: website
+  resources:
+    - references.bib
 
 website:
-  title: "Job Market Analysis 2024"
+  title: "Jim Portfolio"
   navbar:
     left:
-      - href: introduction.qmd
-        text: "Overview"
-      - href: data_cleaning.qmd
-        text: "Data Prep"
-      - href: salary_compensation_trends.qmd
-        text: "Salary Trends"
-      - href: trends.qmd
-        text: "Career Trends"
-      - href: references.bib
-        text: "References"
+      - text: About You
+        href: about.qmd
+      - text: Projects
+        href: projects.qmd
+      - text: CV
+        href: cv.qmd
+      - text: Contact
+        href: contact.qmd
 
 format:
   html:

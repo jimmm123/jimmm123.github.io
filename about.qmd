@@ -1,0 +1,43 @@
+---
+title: "About You"
+page-layout: full
+toc: false
+body-classes: portfolio-page about-page
+---
+
+::: {.page-hero}
+::: {.hero-kicker}
+About You
+:::
+
+# Jim
+
+I am developing a portfolio around business analytics, data science, and applied research. My work focuses on turning messy datasets into practical insights that can support career, salary, and labor market decisions.
+:::
+
+::: {.content-band}
+
+## Focus Areas
+
+::: {.split-section}
+::: {.section-copy}
+### Data analysis with a career lens
+
+I am interested in how AI, technical skills, education, geography, and work arrangement shape employment opportunities. The projects here use real job posting data to explain what employers ask for and how compensation changes across roles.
+:::
+
+::: {.quick-list}
+- Data cleaning and preparation
+- Salary and compensation analysis
+- Skill demand research
+- Visualization and storytelling
+:::
+:::
+
+## Current Portfolio
+
+The main project in this site is a 2024 job market analysis. It includes a project overview, data cleaning process, salary and compensation trends, and career trend analysis.
+
+[Explore Projects](projects.html){.text-link}
+
+:::
