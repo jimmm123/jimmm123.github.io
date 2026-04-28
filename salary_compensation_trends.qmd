@@ -1,0 +1,365 @@
+---
+title: "Salary & Compensation trends"
+format: html
+jupyter: python3
+
+---
+
+## Research Questions
+This section focuses on the following questions:
+
+1. How do salaries differ across AI vs. non-AI careers?
+2. What regions offer the highest-paying jobs in AI-related and traditional careers?
+3. Are remote jobs better paying than in-office roles?
+4. How did salary levels change over time in 2024?
+5. What industries saw the biggest wage growth in 2024?
+6. Which job characteristics are most strongly associated with salary?
+7. Can machine learning predict whether a job is high-paying?
+
+## Load Data
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import statsmodels.formula.api as smf
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+df = pd.read_csv("data/processed/lightcast_cleaned.csv")
+
+df["POSTED"] = pd.to_datetime(df["POSTED"], errors="coerce")
+df["post_month"] = df["POSTED"].dt.to_period("M").astype(str)
+df["post_year"] = df["POSTED"].dt.year
+
+df.head()
+```
+
+## 1. How do salaries differ across AI vs. non-AI careers
+```{python}
+ai_keywords = [
+    "ai", "artificial intelligence", "machine learning", "ml",
+    "deep learning", "nlp", "computer vision", "generative ai",
+    "data scientist", "machine learning engineer", "ai engineer"
+]
+
+df["TITLE_CLEAN"] = df["TITLE_CLEAN"].fillna("").astype(str)
+
+df["ai_flag"] = df["TITLE_CLEAN"].str.lower().apply(
+    lambda x: "AI-related" if any(k in x for k in ai_keywords) else "Non-AI"
+)
+
+salary_ai = (
+    df.groupby("ai_flag")["salary_annual"]
+      .mean()
+      .reset_index()
+      .sort_values("salary_annual", ascending=False)
+)
+
+fig = px.bar(
+    salary_ai,
+    x="ai_flag",
+    y="salary_annual",
+    title="Average Annual Salary: AI-related vs. Non-AI Careers",
+    labels={"ai_flag": "Career Type", "salary_annual": "Average Annual Salary"}
+)
+fig.show()
+```
+
+The bar chart shows that AI-related careers have a slightly higher average annual salary than non-AI careers. 
+In this sample, the average salary for AI-related roles is around 120k, while non-AI roles are slightly lower at about 116k. 
+This suggests that jobs involving AI and machine learning skills tend to be compensated at a somewhat higher level.
+
+However, the salary gap is not very large, which may indicate that many non-AI positions in the dataset are also high-paying technical or business roles. 
+Overall, the figure supports the idea that AI-related jobs offer a salary premium, but the difference appears to be moderate rather than dramatic.
+
+
+## 2. What regions offer the highest-paying jobs in AI-related and traditional careers?
+```{python}
+region_salary = (
+    df.groupby(["STATE_NAME", "ai_flag"])["salary_annual"]
+    .mean()
+    .reset_index()
+)
+
+top_regions = (
+    region_salary.groupby("STATE_NAME")["salary_annual"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+    .index
+)
+
+region_salary_top = region_salary[region_salary["STATE_NAME"].isin(top_regions)]
+
+fig = px.bar(
+    region_salary_top.sort_values("salary_annual", ascending=True),
+    x="salary_annual",
+    y="STATE_NAME",
+    color="ai_flag",
+    barmode="group",
+    orientation="h",
+    title="Top Regions by Average Salary: AI-related vs. Non-AI Careers",
+    labels={
+        "STATE_NAME": "Region",
+        "salary_annual": "Average Annual Salary",
+        "ai_flag": "Career Type"
+    }
+)
+
+fig.show()
+```
+
+The chart shows that salary levels vary noticeably across regions, confirming that geography is an important factor in compensation. Among the regions shown, Montana has the highest average salary for AI-related jobs, making it the strongest-paying region for AI-related careers in this comparison. In general, AI-related jobs tend to pay more than non-AI jobs across most of the top-paying regions, suggesting that AI and technical skills receive an additional salary premium in many local labor markets.
+
+At the same time, the size of the salary gap differs across regions, which indicates that the value of AI-related skills is not uniform across locations. Overall, the figure suggests that both region and career type jointly influence salary outcomes.
+
+## 3. Are remote jobs better paying than in-office roles?
+```{python}
+remote_salary = (
+    df[df["REMOTE_TYPE_NAME"].notna()]
+    .groupby("REMOTE_TYPE_NAME")["salary_annual"]
+    .mean()
+    .reset_index()
+    .sort_values("salary_annual", ascending=False)
+)
+
+fig = px.bar(
+    remote_salary,
+    x="REMOTE_TYPE_NAME",
+    y="salary_annual",
+    title="Average Annual Salary by Work Arrangement",
+    labels={
+        "REMOTE_TYPE_NAME": "Work Arrangement",
+        "salary_annual": "Average Annual Salary"
+    }
+)
+
+fig.show()
+```
+The chart shows that fully remote jobs have the highest average annual salary, followed by hybrid remote roles, while not remote jobs have the lowest average salary among the three categories. This suggests that remote work is associated with higher-paying positions in this dataset.
+
+However, this result should be interpreted carefully. The higher average salary for remote jobs may reflect the fact that many remote positions are concentrated in high-paying technical or analytical occupations, rather than remote work itself directly causing higher pay. Overall, the figure indicates a positive association between remote work arrangements and salary levels, but other factors such as industry, role type, and experience may also be important.
+
+
+## 4. How did salary levels change over time in 2024?
+```{python}
+df["POSTED"] = pd.to_datetime(df["POSTED"], errors="coerce")
+df["post_month"] = df["POSTED"].dt.to_period("M").astype(str)
+df["post_year"] = df["POSTED"].dt.year
+
+salary_time = (
+    df[df["post_year"] == 2024]
+    .groupby(["post_month", "ai_flag"])["salary_annual"]
+    .mean()
+    .reset_index()
+)
+
+fig = px.line(
+    salary_time,
+    x="post_month",
+    y="salary_annual",
+    color="ai_flag",
+    markers=True,
+    title="Monthly Average Salary in 2024: AI-related vs. Non-AI Careers",
+    labels={
+        "post_month": "Month",
+        "salary_annual": "Average Annual Salary",
+        "ai_flag": "Career Type"
+    }
+)
+
+fig.show()
+```
+The line chart shows that AI-related jobs generally maintained higher average salaries than non-AI jobs during most months in 2024. While both groups experienced a decline around July 2024, salaries rose again afterward, especially for AI-related roles. From July to September, the salary gap widened noticeably, with AI-related careers showing stronger upward growth than non-AI careers.
+
+This pattern suggests that the salary premium for AI-related jobs was not only persistent over time but also became more pronounced toward the later months in the dataset. Overall, the time analysis indicates that AI-related roles experienced greater salary growth and stronger momentum than non-AI roles in 2024.
+
+
+## 5. What industries saw the biggest wage growth in 2024?
+```{python}
+industry_month = (
+    df[df["post_year"] == 2024]
+    .groupby(["NAICS2_NAME", "post_month"])["salary_annual"]
+    .mean()
+    .reset_index()
+)
+
+first_last = industry_month[industry_month["post_month"].isin(["2024-05", "2024-09"])]
+
+industry_growth = (
+    first_last.pivot(index="NAICS2_NAME", columns="post_month", values="salary_annual")
+    .dropna()
+    .reset_index()
+)
+
+industry_growth["wage_growth"] = industry_growth["2024-09"] - industry_growth["2024-05"]
+
+industry_growth_top = industry_growth.sort_values("wage_growth", ascending=False).head(10)
+
+fig = px.bar(
+    industry_growth_top,
+    x="NAICS2_NAME",
+    y="wage_growth",
+    title="Top 10 Industries by Wage Growth in 2024",
+    labels={
+        "NAICS2_NAME": "Industry",
+        "wage_growth": "Wage Growth"
+    }
+)
+
+fig.show()
+```
+The chart shows that wage growth in 2024 was uneven across industries, with some sectors experiencing much stronger increases than others. Public Administration recorded the largest wage growth among the industries shown, followed by Unclassified Industry and Retail Trade. This suggests that salary growth was concentrated in a limited number of sectors rather than being broadly shared across the labor market.
+
+The differences across industries indicate that sector-specific demand, hiring conditions, and labor shortages may have played an important role in shaping wage changes during 2024. Overall, industry appears to be an important dimension for understanding how salary levels evolved over time.
+
+## 6. Which job characteristics are most strongly associated with salary?
+```{python}
+reg_df = df[[
+    "salary_annual",
+    "ai_flag",
+    "REMOTE_TYPE_NAME",
+    "MIN_YEARS_EXPERIENCE",
+    "STATE_NAME",
+    "NAICS2_NAME"
+]].dropna().copy()
+
+reg_df["log_salary"] = np.log(reg_df["salary_annual"])
+reg_df["ai_binary"] = np.where(reg_df["ai_flag"] == "AI-related", 1, 0)
+reg_df["remote_flag"] = np.where(reg_df["REMOTE_TYPE_NAME"] == "Remote", 1, 0)
+reg_df["hybrid_flag"] = np.where(reg_df["REMOTE_TYPE_NAME"] == "Hybrid Remote", 1, 0)
+
+model = smf.ols(
+    "log_salary ~ ai_binary + remote_flag + hybrid_flag + MIN_YEARS_EXPERIENCE + C(STATE_NAME) + C(NAICS2_NAME)",
+    data=reg_df
+).fit()
+
+# print(model.summary())
+key_results = pd.DataFrame({
+    "Variable": ["AI-related job", "Remote job", "Minimum years of experience"],
+    "Coefficient": [
+        model.params["ai_binary"],
+        model.params["remote_flag"],
+        model.params["MIN_YEARS_EXPERIENCE"]
+    ],
+    "P-value": [
+        model.pvalues["ai_binary"],
+        model.pvalues["remote_flag"],
+        model.pvalues["MIN_YEARS_EXPERIENCE"]
+    ]
+})
+
+key_results
+```
+
+
+The regression results indicate that several job characteristics are significantly associated with salary after controlling for region and industry. 
+
+First, the coefficient for `ai_binary` is positive and statistically significant (p < 0.05), suggesting that AI-related jobs are associated with higher salaries than non-AI roles. The estimated coefficient implies an approximate 5.7% salary premium.
+
+Second, the coefficient for `remote_flag` is also positive and statistically significant (p < 0.001), indicating that fully remote jobs tend to offer higher salaries, with an estimated premium of about 8.3%.
+
+Finally, `MIN_YEARS_EXPERIENCE` has a positive and highly significant relationship with salary (p ≈ 0), meaning that roles requiring more experience are associated with higher pay. Each additional year of minimum required experience corresponds to roughly a 5.5% increase in salary.
+
+Overall, the regression suggests that AI specialization, remote work, and experience requirements are key predictors of salary in the 2024 job market.
+
+
+## 7. Can machine learning predict whether a job is high-paying?
+```{python}
+ml_df = df[[
+    "salary_annual",
+    "ai_flag",
+    "REMOTE_TYPE_NAME",
+    "MIN_YEARS_EXPERIENCE",
+    "MAX_YEARS_EXPERIENCE",
+    "STATE_NAME",
+    "NAICS2_NAME"
+]].dropna().copy()
+
+ml_df["high_salary"] = np.where(
+    ml_df["salary_annual"] >= ml_df["salary_annual"].median(),
+    1,
+    0
+)
+
+ml_df["remote_flag"] = np.where(ml_df["REMOTE_TYPE_NAME"] == "Remote", 1, 0)
+ml_df["hybrid_flag"] = np.where(ml_df["REMOTE_TYPE_NAME"] == "Hybrid Remote", 1, 0)
+ml_df["ai_binary"] = np.where(ml_df["ai_flag"] == "AI-related", 1, 0)
+
+ml_df = ml_df[[
+    "high_salary",
+    "ai_binary",
+    "remote_flag",
+    "hybrid_flag",
+    "MIN_YEARS_EXPERIENCE",
+    "MAX_YEARS_EXPERIENCE",
+    "STATE_NAME",
+    "NAICS2_NAME"
+]]
+
+ml_df = pd.get_dummies(ml_df, columns=["STATE_NAME", "NAICS2_NAME"], drop_first=True)
+
+X = ml_df.drop(columns="high_salary")
+y = ml_df["high_salary"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+rf = RandomForestClassifier(
+    n_estimators=200,
+    max_depth=10,
+    random_state=42
+)
+
+rf.fit(X_train, y_train)
+y_pred = rf.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+```
+
+The machine learning model achieved an accuracy of about 75.7%, indicating that job characteristics in the 2024 postings dataset can reasonably predict whether a position is high-paying. Features such as AI-related status, remote work, experience requirements, region, and industry appear to capture meaningful salary patterns in the 2024 job market.
+
+The model performed slightly better at identifying high-salary jobs than low-salary jobs, which suggests that these features are particularly informative for recognizing better-paid roles. Overall, the machine learning results support the earlier regression analysis by showing that salary differences in 2024 were associated with multiple job-related factors rather than a single variable alone.
+
+## 8. Do AI-related jobs offer higher salaries than non-AI jobs?
+
+```{python}
+ai_salary_summary = (
+    df.dropna(subset=["salary_annual", "ai_flag"])
+      .groupby("ai_flag")["salary_annual"]
+      .agg(["count", "mean", "median"])
+      .reset_index()
+)
+
+ai_salary_summary
+```
+
+```{python}
+import matplotlib.pyplot as plt
+
+plot_df = df.dropna(subset=["salary_annual", "ai_flag"]).copy()
+
+plt.figure(figsize=(8, 5))
+
+ai_salary = plot_df[plot_df["ai_flag"] == "AI-related"]["salary_annual"]
+non_ai_salary = plot_df[plot_df["ai_flag"] == "Non-AI"]["salary_annual"]
+
+plt.boxplot(
+    [ai_salary, non_ai_salary],
+    labels=["AI-related", "Non-AI"]
+)
+
+plt.title("Annual Salary Distribution by AI Job Status")
+plt.xlabel("Job Type")
+plt.ylabel("Annual Salary")
+plt.xticks(rotation=0)
+plt.show()
+```
+
+The summary statistics show that AI-related job postings have a slightly higher average and median salary than non-AI postings. AI-related jobs have a mean annual salary of about $120,716 and a median salary of $119,500, compared with a mean of about $116,143 and a median of $114,000 for non-AI jobs. This suggests that AI-related jobs tend to offer somewhat higher compensation, which aligns with broader labor market trends showing increasing demand and value for AI-related skills [@lightcast2024; @bls_ai2024].
+
+The boxplot shows that the salary distributions for AI-related and non-AI jobs are fairly similar, though AI-related jobs have a slightly higher median. Both groups include high-salary outliers, so the difference is not extremely large. This result should be interpreted cautiously because salary may also depend on experience, industry, location, and remote-work status. These findings are also consistent with research highlighting the economic impact and productivity gains associated with AI adoption [@mckinsey_ai2024].

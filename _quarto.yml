@@ -1,0 +1,29 @@
+project:
+  type: website
+
+website:
+  title: "Job Market Analysis 2024"
+  navbar:
+    left:
+      - href: introduction.qmd
+        text: "Overview"
+      - href: data_cleaning.qmd
+        text: "Data Prep"
+      - href: salary_compensation_trends.qmd
+        text: "Salary Trends"
+      - href: trends.qmd
+        text: "Career Trends"
+      - href: references.bib
+        text: "References"
+
+format:
+  html:
+    css: style.css
+    theme: cosmo
+    toc: true
+execute:
+  echo: false
+  eval: true
+  code-fold: true
+  warning: false
+  message: false
